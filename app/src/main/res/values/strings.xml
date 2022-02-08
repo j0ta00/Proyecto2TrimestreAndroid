@@ -2,4 +2,7 @@
     <string name="app_name">Proyecto2TrimestreAndroid</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="link">¿Has olvidado tu contraseña?
+        <a href="https://ps.w.org/under-construction-page/assets/screenshot-2.png?rev=1840052">Clica aquí</a>
+    </string>
 </resources>
