@@ -9,9 +9,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.ui.semantics.Role.Companion.Button
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.room.Room
 import es.iesnervion.juanjomz.proyecto2trimestreandroid.databinding.FragmentLoginBinding
+import kotlinx.coroutines.launch
 import room.AppDatabase
+import room.UserDao
 import room.UserEntity
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,33 +30,60 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class LoginFragment : Fragment(), View.OnClickListener {
-private lateinit var database:AppDatabase
-private lateinit var binding:FragmentLoginBinding
+    val vmTienda: ViewModelTienda by activityViewModels()
+    private lateinit var binding: FragmentLoginBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= FragmentLoginBinding.inflate(inflater, container, false)
-        database= Room.databaseBuilder(
-            binding.root.context,AppDatabase::class.java,AppDatabase.DATABASE_NAME
-        ).allowMainThreadQueries().build()
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding=FragmentLoginBinding.bind(view)
+        binding.img.setClipToOutline(true)
+        binding = FragmentLoginBinding.bind(view)
         binding.logBtn.setOnClickListener(this)
+        binding.regBtn.setOnClickListener(this)
     }
 
     override fun onClick(btn: View?) {
-        val user=UserEntity(user="prueba",password ="prueba")
-        database.userDao.insert(user)
-        val users=database.userDao.getAllUsers(binding.edUser.text.toString(),binding.edPassword.text.toString())
-        if(users.isNotEmpty()){
-            Toast.makeText(context,"registrado con éxito", Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(context,"datos incorrectos", Toast.LENGTH_SHORT).show()
+        var users: List<UserEntity>?=null
+        if (btn != null) {
+            if (btn != binding.regBtn) {
+                val user = UserEntity(
+                    dni = "prueba",
+                    password = "prueba",
+                    email = "",
+                    name = "",
+                    surname = "",
+                    phone = ""
+                )
+                viewLifecycleOwner.lifecycleScope.launch {
+                    vmTienda.bbdd.value?.userDao?.insert(user)
+                    users = vmTienda.bbdd.value?.userDao?.getAllUsers(
+                        binding.edDni.text.toString(),
+                        binding.edPassword.text.toString()
+                    )
+                }
+                if (users != null && users!!.isNotEmpty()) {
+                    Toast.makeText(context, "registrado con éxito", Toast.LENGTH_SHORT).show()
+                } else {
+                    if (binding.edDni.text.isNullOrEmpty()) {
+                        binding.edDni.error = getString(R.string.emptyField)
+                    }
+                    if (binding.edPassword.text.isNullOrEmpty()) {
+                        binding.edPassword.error = getString(R.string.emptyField)
+                    }
+                    if (!binding.edPassword.text.isNullOrEmpty() && !binding.edDni.text.isNullOrEmpty()) {
+                        Toast.makeText(context, "datos incorrectos", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Navigation.findNavController(binding.root).navigate(R.id.registerFragment);
+            }
         }
     }
 

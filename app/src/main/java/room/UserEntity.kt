@@ -9,10 +9,21 @@ data class UserEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id : Long=0,
-    @ColumnInfo(name = "user")
+    @ColumnInfo(name = "dni")
     @NonNull
-    var user : String,
+    var dni : String,
     @ColumnInfo(name = "password")
     @NonNull
-    var password : String
+    var password : String,
+    @ColumnInfo(name = "email")
+    @NonNull
+    var email : String,
+    @ColumnInfo(name = "phone")
+    var phone : String,
+    @ColumnInfo(name = "name")
+    @NonNull
+    var name : String,
+    @ColumnInfo(name = "surname")
+    var surname : String
+
 )
