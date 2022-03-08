@@ -1,22 +1,16 @@
 package es.iesnervion.juanjomz.proyecto2trimestreandroid
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
-import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import androidx.room.Room
 import es.iesnervion.juanjomz.proyecto2trimestreandroid.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
-import room.AppDatabase
-import room.UserDao
 import room.UserEntity
 
 // TODO: Rename parameter arguments, choose names that match
@@ -62,14 +56,16 @@ class LoginFragment : Fragment(), View.OnClickListener {
                     phone = ""
                 )
                 viewLifecycleOwner.lifecycleScope.launch {
-                    vmTienda.bbdd.value?.userDao?.insert(user)
-                    users = vmTienda.bbdd.value?.userDao?.getAllUsers(
+                    vmTienda.bbdd.value?.userDao?.insertarUsuario(user)
+                    users = vmTienda.bbdd.value?.userDao?.obtenerTodosLosUsuarios(
                         binding.edDni.text.toString(),
                         binding.edPassword.text.toString()
                     )
                 }
                 if (users != null && users!!.isNotEmpty()) {
                     Toast.makeText(context, "registrado con éxito", Toast.LENGTH_SHORT).show()
+                    vmTienda.usuario.postValue(users!![0])
+                    Navigation.findNavController(binding.root).navigate(R.id.shopFragment)
                 } else {
                     if (binding.edDni.text.isNullOrEmpty()) {
                         binding.edDni.error = getString(R.string.emptyField)

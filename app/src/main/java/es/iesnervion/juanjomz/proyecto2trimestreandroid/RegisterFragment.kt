@@ -90,7 +90,7 @@ class RegisterFragment :Fragment(), View.OnClickListener{
                 phone = binding.edTelefono.text.toString()
             )
             viewLifecycleOwner.lifecycleScope.launch{
-                vmTienda.bbdd.value?.userDao?.insert(user)
+                vmTienda.bbdd.value?.userDao?.insertarUsuario(user)
             }
             Navigation.findNavController(binding.root).navigate(R.id.loginFragment);
         }else {

@@ -6,7 +6,9 @@ import androidx.room.Query
 @Dao
 interface UserDao {
     @Insert
-    suspend fun insert(user: UserEntity)
+     fun insertarUsuario(user: UserEntity)
     @Query("SELECT*FROM users Where dni=:dni AND password=:password")
-    suspend fun getAllUsers(dni:String,password:String): List<UserEntity>
+    fun obtenerTodosLosUsuarios(dni:String, password:String): List<UserEntity>
+    @Query("SELECT*FROM users Where dni=:dni AND password=:password")
+    fun obtenerUsuario(dni:String, password:String): UserEntity
 }

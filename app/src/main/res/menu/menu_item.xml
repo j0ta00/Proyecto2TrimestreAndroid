@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+      android:id="@+id/searchViewProductos"
+        android:title="Search"
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="android.widget.SearchView"></item>
+    <group>
+        <item
+            android:id="@+id/Filtros"
+            android:icon="@drawable/ic_baseline_filter_alt_24"
+            app:showAsAction="always"
+            app:actionViewClass="android.widget.ImageButton"
+            android:title="Filtros"></item>
+    </group>
+</menu>

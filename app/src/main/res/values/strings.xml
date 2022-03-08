@@ -9,4 +9,10 @@
         El campo no puede estar vacio
     </string>
     <string name="required">*Campo Obligatorio</string>
+    <string-array name="categorias">
+        <item>Carne</item>
+        <item>Electronica</item>
+        <item>Pescado</item>
+        <item>Limpieza</item>
+    </string-array>
 </resources>
