@@ -26,8 +26,13 @@
         <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/drawable/round_buttons.xml" value="0.1398148148148148" />
         <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/drawable/round_outline.xml" value="0.321875" />
         <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/detalles_productos_layout.xml" value="0.2671875" />
+        <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/fragment_cesta.xml" value="0.25" />
         <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/fragment_register.xml" value="0.4714859437751004" />
+        <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/fragment_shop.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/row_layout_2.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/jmunoz/AndroidStudioProjects/Proyecto2TrimestreAndroid/app/src/main/res/layout/rowlayout.xml" value="0.20520833333333333" />
       </map>
     </option>
   </component>

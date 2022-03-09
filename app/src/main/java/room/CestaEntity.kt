@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 data class CestaEntity (
     @PrimaryKey(autoGenerate = true)
     val idCesta: Long,
-    val estado: Long,
+    var estado: Long,
     val idUsuario: Long
         )

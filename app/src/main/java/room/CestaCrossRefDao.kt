@@ -13,4 +13,7 @@ interface CestaCrossRefDao {
 
     @Query("SELECT * FROM cesta_cross_ref WHERE idCesta=:idCesta")
     fun obtenerElementosEnLaCesta(idCesta: Long): List<CestaCrossRefEntity>
+
+    @Delete
+    fun borrarProductoDeCesta (lineaCesta:CestaCrossRefEntity)
 }

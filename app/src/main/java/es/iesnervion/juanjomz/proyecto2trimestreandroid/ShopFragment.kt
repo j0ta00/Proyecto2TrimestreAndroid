@@ -36,7 +36,7 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private val categorias= listOf("Carne","Electronica","Pescado","Limpieza")
+    private val categorias= listOf("Carne","Elect.","Mar","Hogar","Restaurar")
     val vmTienda: ViewModelTienda by activityViewModels()
     lateinit var listaProductosFiltrada: ArrayList<ProductEntity>
     private lateinit var binding: FragmentShopBinding
@@ -50,6 +50,21 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+            viewLifecycleOwner.lifecycleScope.launch {
+                var numeroProducto = vmTienda.cesta.value?.let {
+                    vmTienda.bbdd.value?.CestaCrossRefEntity?.obtenerNumeroElementosEnLaCesta(
+                        it.idCesta
+                    )
+                }
+                if (numeroProducto == null) {
+                    binding.counterFab.count = 0
+                } else {
+                    binding.counterFab.count = numeroProducto
+                }
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,19 +81,63 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
             viewLifecycleOwner.lifecycleScope.launch {
                 vmTienda.bbdd.value?.productDao?.insertarProductos(listOf(
                     ProductEntity(
-                        nombre="Salchichon",
-                        descripcion = "Sabroso salchichón de extremadura, de una alta calidad, para un paladar gourmet",
-                        precio=3.0,
-                        foto = "https://www.supermercadosmas.com/media/catalog/product/cache/d91bc430dbe2e3d899436802c7aa5233/i/m/import_catalog_images_29_21_292188_v7.jpg"
+                        nombre="Filete de ternera",
+                        descripcion = "Filete con certificación de carne kobe, proveniente de las mejores vacas del mundo",
+                        precio=13.0,
+                        foto = "https://www.freepnglogos.com/uploads/meat-png/meat-sally-18.png"
                         ,categoria=categorias[0]
                     ),
                     ProductEntity(
-                        nombre="Jamón",
-                        descripcion ="Jamón de jabugo, manjar de origen español, proveniente del cerdo ibérico de más alta calidad",
-                        precio=12.0,
-                        foto ="https://i0.wp.com/commememucho.com/wp-content/uploads/2020/07/IMG_20190618_131750902.jpg?fit=750%2C563&ssl=1",
-                        categoria=categorias[0])
-                ))
+                        nombre="Carne roja",
+                        descripcion ="Carne de la mejor calidad, precio asequible y gran sabor",
+                        precio=4.0,
+                        foto ="https://www.freepnglogos.com/uploads/meat-png/meat-png-transparent-image-pngpix-11.png",
+                        categoria=categorias[0]),
+                    ProductEntity(
+                        nombre="Pollo Frito",
+                        descripcion ="Mejor que el de kentucky!!, este pollo frito te dejará sin palabras",
+                        precio=5.0,
+                        foto ="https://www.freepnglogos.com/uploads/fried-chicken-png/home-texas-chicken-fried-chicken-oman-26.png",
+                        categoria=categorias[0]),
+                    ProductEntity(
+                        nombre="Lavadora",
+                        descripcion ="Electrodoméstico renovado, todas las piezas que fallaban fueron arregladas",
+                        precio=40.0,
+                        foto ="https://www.freepnglogos.com/uploads/washing-machine-png/washing-machine-washing-machines-front-load-washers-electrolux-0.png",
+                        categoria=categorias[1]),
+                    ProductEntity(
+                        nombre="Ordenador",
+                        descripcion ="El mejor ordenador del mercado, puede con todo!!",
+                        precio=87.0,
+                        foto ="https://www.freepnglogos.com/uploads/computer-png/download-computer-desktop-png-image-png-image-21.png",
+                        categoria=categorias[1]),
+                    ProductEntity(
+                        nombre="Escoba",
+                        descripcion ="Olvidate tú de limpiar ya que esta escoba es tan buena que casi limpiara ella sola por ti",
+                        precio=10.0,
+                        foto ="https://www.freepnglogos.com/uploads/broom-png/broom-halloween-graphics-3.png",
+                        categoria=categorias[3]),
+                    ProductEntity(
+                        nombre="Dorada",
+                        descripcion ="Recien pescada del mar cantábrico, un manjar de la mayor calidad",
+                        precio=7.0,
+                        foto ="https://www.freepnglogos.com/uploads/fish-png/fish-png-systomus-sarana-wikispecies-13.png",
+                        categoria=categorias[2]),
+                    ProductEntity(
+                        nombre="Sardina",
+                        descripcion ="Buenisimas a la plancha y con un chorreón de jugo de limón",
+                        precio=5.0,
+                        foto ="https://www.freepnglogos.com/uploads/fish-png/fish-png-high-resolution-web-icons-png-36.png",
+                        categoria=categorias[2]),
+                    ProductEntity(
+                        nombre="Cangrejo",
+                        descripcion ="Perfecto para una cena de navidad en familia",
+                        precio=9.0,
+                        foto ="https://www.freepnglogos.com/uploads/crab-png/live-dungeness-crab-dolly-fish-market-15.png",
+                        categoria=categorias[2])
+
+                )
+                )
                 vmTienda.listaProductos.value=
                     vmTienda.bbdd.value?.productDao?.obtenerTodosLosProductos(
                     )
@@ -92,11 +151,22 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
                     )
                 }
             }
-                if(vmTienda.cesta.value!=null) {
-                    binding.counterFab.count=vmTienda.bbdd.value?.CestaCrossRefEntity?.obtenerNumeroElementosEnLaCesta(vmTienda.cesta.value!!.idCesta)!!
-                }
         }
+        if(vmTienda.cesta.value!=null) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                var numeroProducto = vmTienda.cesta.value?.let {
+                    vmTienda.bbdd.value?.CestaCrossRefEntity?.obtenerNumeroElementosEnLaCesta(
+                        it.idCesta
+                    )
+                }
 
+                if (numeroProducto == null) {
+                    binding.counterFab.count = 0
+                } else {
+                    binding.counterFab.count = numeroProducto
+                }
+            }
+        }
             listaProductosFiltrada=ArrayList(vmTienda.listaProductos.value)
             binding.rcvProductos.adapter = AdaptadorProducto(listaProductosFiltrada) { onItemSelected(it) }
         setHasOptionsMenu(true)
@@ -237,8 +307,15 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        listaProductosFiltrada=ArrayList(ArrayList(vmTienda.listaProductos!!.value).filter{producto->producto.categoria==categorias[p2]})
-        binding.rcvProductos.adapter=AdaptadorProducto(listaProductosFiltrada) { onItemSelected(it) }
+        if(p2!=4) {
+            listaProductosFiltrada =
+                ArrayList(ArrayList(vmTienda.listaProductos!!.value).filter { producto -> producto.categoria == categorias[p2] })
+
+        }else{
+            listaProductosFiltrada =ArrayList(ArrayList(vmTienda.listaProductos!!.value))
+        }
+        binding.rcvProductos.adapter =
+            AdaptadorProducto(listaProductosFiltrada) { onItemSelected(it) }
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

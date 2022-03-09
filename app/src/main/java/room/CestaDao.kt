@@ -1,9 +1,6 @@
 package room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface CestaDao {
@@ -12,4 +9,6 @@ interface CestaDao {
 
     @Query("SELECT * FROM cesta WHERE idUsuario=:idUsuario AND estado=0")
     fun obtenerCestaSinProcesar(idUsuario: Long): CestaEntity
+    @Update
+    fun actualizarEstadoCesta(cesta:CestaEntity)
 }
