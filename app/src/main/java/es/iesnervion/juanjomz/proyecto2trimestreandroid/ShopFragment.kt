@@ -1,10 +1,11 @@
 package es.iesnervion.juanjomz.proyecto2trimestreandroid
 
-import android.os.Bundle
+import android.os. Bundle
 import android.view.*
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -36,10 +37,12 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private val categorias= listOf("Carne","Elect.","Mar","Hogar","Restaurar")
+    private val categorias= listOf("Restaurar","Carne","Elect.","Mar","Hogar")
+    var antiguoId=0
     val vmTienda: ViewModelTienda by activityViewModels()
     lateinit var listaProductosFiltrada: ArrayList<ProductEntity>
-    private lateinit var binding: FragmentShopBinding
+    private var anhiadir=false
+    lateinit var binding: FragmentShopBinding
     private lateinit var productoSeleccionado:ProductEntity
     private lateinit var cestaCrossRef:List<CestaCrossRefEntity>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,56 +88,56 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
                         descripcion = "Filete con certificación de carne kobe, proveniente de las mejores vacas del mundo",
                         precio=13.0,
                         foto = "https://www.freepnglogos.com/uploads/meat-png/meat-sally-18.png"
-                        ,categoria=categorias[0]
+                        ,categoria=categorias[1]
                     ),
                     ProductEntity(
                         nombre="Carne roja",
                         descripcion ="Carne de la mejor calidad, precio asequible y gran sabor",
                         precio=4.0,
                         foto ="https://www.freepnglogos.com/uploads/meat-png/meat-png-transparent-image-pngpix-11.png",
-                        categoria=categorias[0]),
+                        categoria=categorias[1]),
                     ProductEntity(
                         nombre="Pollo Frito",
                         descripcion ="Mejor que el de kentucky!!, este pollo frito te dejará sin palabras",
                         precio=5.0,
                         foto ="https://www.freepnglogos.com/uploads/fried-chicken-png/home-texas-chicken-fried-chicken-oman-26.png",
-                        categoria=categorias[0]),
+                        categoria=categorias[1]),
                     ProductEntity(
                         nombre="Lavadora",
                         descripcion ="Electrodoméstico renovado, todas las piezas que fallaban fueron arregladas",
                         precio=40.0,
                         foto ="https://www.freepnglogos.com/uploads/washing-machine-png/washing-machine-washing-machines-front-load-washers-electrolux-0.png",
-                        categoria=categorias[1]),
+                        categoria=categorias[2]),
                     ProductEntity(
                         nombre="Ordenador",
                         descripcion ="El mejor ordenador del mercado, puede con todo!!",
                         precio=87.0,
                         foto ="https://www.freepnglogos.com/uploads/computer-png/download-computer-desktop-png-image-png-image-21.png",
-                        categoria=categorias[1]),
+                        categoria=categorias[2]),
                     ProductEntity(
                         nombre="Escoba",
                         descripcion ="Olvidate tú de limpiar ya que esta escoba es tan buena que casi limpiara ella sola por ti",
                         precio=10.0,
                         foto ="https://www.freepnglogos.com/uploads/broom-png/broom-halloween-graphics-3.png",
-                        categoria=categorias[3]),
+                        categoria=categorias[4]),
                     ProductEntity(
                         nombre="Dorada",
                         descripcion ="Recien pescada del mar cantábrico, un manjar de la mayor calidad",
                         precio=7.0,
                         foto ="https://www.freepnglogos.com/uploads/fish-png/fish-png-systomus-sarana-wikispecies-13.png",
-                        categoria=categorias[2]),
+                        categoria=categorias[3]),
                     ProductEntity(
                         nombre="Sardina",
                         descripcion ="Buenisimas a la plancha y con un chorreón de jugo de limón",
                         precio=5.0,
                         foto ="https://www.freepnglogos.com/uploads/fish-png/fish-png-high-resolution-web-icons-png-36.png",
-                        categoria=categorias[2]),
+                        categoria=categorias[3]),
                     ProductEntity(
                         nombre="Cangrejo",
                         descripcion ="Perfecto para una cena de navidad en familia",
                         precio=9.0,
                         foto ="https://www.freepnglogos.com/uploads/crab-png/live-dungeness-crab-dolly-fish-market-15.png",
-                        categoria=categorias[2])
+                        categoria=categorias[3])
 
                 )
                 )
@@ -173,19 +176,32 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
         return binding.root
     }
     fun onItemSelected(productEntity:ProductEntity){
-        var detalles_layout = layoutInflater.inflate(
-        R.layout.detalles_productos_layout, null)
-        productoSeleccionado=productEntity
-        Glide.with(detalles_layout.context).load(productEntity.foto).into(detalles_layout.findViewById<ImageView>(R.id.DetallesFotoProducto))
-        detalles_layout.findViewById<TextView>(R.id.DetallesNombreProducto).text=productEntity.nombre
-        detalles_layout.findViewById<TextView>(R.id.DetallesDescripcionProducto).text=productEntity.descripcion
-        detalles_layout.findViewById<TextView>(R.id.DetallesCategoriaProducto).text="Categoría: "+productEntity.categoria
-        detalles_layout.findViewById<TextView>(R.id.DetallesPrecioProducto).text="Precio: "+productEntity.precio.toString()+" €"
-        detalles_layout.findViewById<Button>(R.id.btnAnhiadirProductoALaCesta).setOnClickListener(this)
-        MaterialAlertDialogBuilder(this.requireContext())
-            .setTitle("Detalles del producto")
-            .setView(detalles_layout)
-            .show()
+        if(productEntity.id!=0L) {
+            var detalles_layout = layoutInflater.inflate(
+                R.layout.detalles_productos_layout, null
+            )
+            productoSeleccionado = productEntity
+            Glide.with(detalles_layout.context).load(productEntity.foto)
+                .into(detalles_layout.findViewById<ImageView>(R.id.DetallesFotoProducto))
+            detalles_layout.findViewById<TextView>(R.id.DetallesNombreProducto).text =
+                productEntity.nombre
+            detalles_layout.findViewById<TextView>(R.id.DetallesDescripcionProducto).text =
+                productEntity.descripcion
+            detalles_layout.findViewById<TextView>(R.id.DetallesCategoriaProducto).text =
+                "Categoría: " + productEntity.categoria
+            detalles_layout.findViewById<TextView>(R.id.DetallesPrecioProducto).text =
+                "Precio: " + productEntity.precio.toString() + " €"
+            detalles_layout.findViewById<Button>(R.id.btnAnhiadirProductoALaCesta)
+                .setOnClickListener(this)
+            MaterialAlertDialogBuilder(this.requireContext())
+                .setTitle("Detalles del producto")
+                .setView(detalles_layout)
+                .show()
+        }else{
+            productEntity.id=vmTienda.bbdd?.value?.productDao?.obtenerIdProducto(productEntity.nombre)!!
+            productoSeleccionado=productEntity
+            anhiadirProductoACesta()
+        }
     }
 
     @Override
@@ -292,7 +308,38 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
             anhiadirProductoACesta()
         }
     }
-    private fun anhiadirProductoACesta(){
+    class AdaptadorProducto(val productEntities: List<ProductEntity>, private val onClickListener:(ProductEntity)->Unit):
+        RecyclerView.Adapter<AdaptadorProducto.MyViewHolder>(){
+        class MyViewHolder(val view: View): RecyclerView.ViewHolder(view){
+            val binding= RowlayoutBinding.bind(view)
+            fun render(productEntity: ProductEntity, onClickListener:(ProductEntity)->Unit){
+                binding.nombreProducto.text=productEntity.nombre
+                binding.precioProducto.text="Precio: "+productEntity.precio.toString()+" €"
+                binding.btnAnhiadirCestaDetalle.setOnClickListener{
+                    productEntity.id=0L
+                    onClickListener(productEntity)
+
+                }
+                Glide.with(view.context).load(productEntity.foto).into(binding.fotoProducto)
+                itemView.setOnClickListener{
+                    onClickListener(productEntity)
+
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val layoutInflater= LayoutInflater.from(parent.context)
+            return MyViewHolder(layoutInflater.inflate(R.layout.rowlayout,parent,false))
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.render(productEntities[position],onClickListener)
+        }
+
+        override fun getItemCount(): Int = productEntities.size
+    }
+     fun anhiadirProductoACesta(){
         if(vmTienda.cesta.value==null){
             viewLifecycleOwner.lifecycleScope.launch {
                 var cestaEntity=CestaEntity(idCesta = 0,estado=0,idUsuario=vmTienda.usuario.value!!.id)
@@ -307,7 +354,7 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        if(p2!=4) {
+        if(p2!=0) {
             listaProductosFiltrada =
                 ArrayList(ArrayList(vmTienda.listaProductos!!.value).filter { producto -> producto.categoria == categorias[p2] })
 
@@ -325,3 +372,5 @@ class ShopFragment : Fragment(), View.OnClickListener, AdapterView.OnItemSelecte
 
 
 }
+
+

@@ -8,6 +8,8 @@ interface ProductDao {
 
     @Query("SELECT*FROM products")
     fun obtenerTodosLosProductos():List<ProductEntity>
+    @Query("SELECT Id FROM products Where nombre=:nombre")
+    fun obtenerIdProducto(nombre:String):Long
     @Insert
     fun insertarProductos(products: List<ProductEntity>)
 }
