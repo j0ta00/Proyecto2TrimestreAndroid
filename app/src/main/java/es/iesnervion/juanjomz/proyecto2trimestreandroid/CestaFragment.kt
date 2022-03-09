@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import es.iesnervion.juanjomz.proyecto2trimestreandroid.databinding.FragmentCestaBinding
-import es.iesnervion.juanjomz.proyecto2trimestreandroid.databinding.FragmentLoginBinding
-import es.iesnervion.juanjomz.proyecto2trimestreandroid.databinding.FragmentShopBinding
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import es.iesnervion.juanjomz.proyecto2trimestreandroid.databinding.*
 import kotlinx.coroutines.launch
 import room.CestaCrossRefEntity
 import room.ProductEntity
@@ -65,7 +65,7 @@ class CestaFragment : Fragment() {
             }
         }
         binding.RecyclerViewCesta.layoutManager=LinearLayoutManager(this.requireContext())
-        binding.RecyclerViewCesta.adapter=AdaptadorProducto(cesta){onItemSelected(it)}
+        binding.RecyclerViewCesta.adapter=AdaptadorCesta(cesta){onItemSelected(it)}
         return binding.root
     }
     fun onItemSelected(productEntity:ProductEntity){}
@@ -87,5 +87,31 @@ class CestaFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    class AdaptadorCesta(val productEntities: List<ProductEntity>, private val onClickListener:(ProductEntity)->Unit):
+        RecyclerView.Adapter<AdaptadorCesta.MyViewHolder>(){
+        class MyViewHolder(val view: View): RecyclerView.ViewHolder(view){
+            val binding= RowLayout2Binding.bind(view)
+            fun render(productEntity: ProductEntity, onClickListener:(ProductEntity)->Unit){
+                binding.nombreProducto.text=productEntity.nombre
+                binding.precioProducto.text="Precio: "+productEntity.precio.toString()+" €"
+                Glide.with(view.context).load(productEntity.foto).into(binding.fotoProducto)
+                itemView.setOnClickListener{
+                    onClickListener(productEntity)
+
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val layoutInflater= LayoutInflater.from(parent.context)
+            return MyViewHolder(layoutInflater.inflate(R.layout.row_layout_2,parent,false))
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.render(productEntities[position],onClickListener)
+        }
+
+        override fun getItemCount(): Int = productEntities.size
     }
 }

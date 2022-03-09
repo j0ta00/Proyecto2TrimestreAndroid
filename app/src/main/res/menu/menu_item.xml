@@ -10,6 +10,7 @@
     <group>
         <item
             android:id="@+id/Filtros"
+            android:color="#71a665"
             android:icon="@drawable/ic_baseline_filter_alt_24"
             app:showAsAction="always"
             app:actionViewClass="android.widget.ImageButton"
